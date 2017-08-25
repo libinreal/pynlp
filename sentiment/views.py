@@ -75,20 +75,6 @@ def analyse(req):
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "*"
         return response
-
-        #return HttpResponse('input unsuccess!')
-        '''
-        if uf.is_valid():
-            print "33333333333333333"
-            #获得表单数据
-            intext = uf.cleaned_data['intext']
-            #intext.decode("gbk").encode("UTF-8")
-            outtext = '{"result":['
-            outtext += sentement(intext) +']}'
-            return HttpResponse(outtext)
-        else:
-            return HttpResponse('input unsuccess!')
-        '''
     else:
         saf = SentimentAnalyseForm()
     return render_to_response('sentiment/analyse.html',{'saf':saf, 'layout':'vertical', 'title':'自然语义分析 情感值分析'})

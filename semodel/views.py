@@ -282,7 +282,7 @@ def role(words, postags, netags, arcs):
     return roles
 
 #情感标注
-def emotion(words, postags, netags, arcs, roles):
+def emotion(words, postags, arcs):
     outtext = ""
     i = 0
     for word, arc,tag in zip(words,arcs,postags):
@@ -298,11 +298,11 @@ def sentement(document):
     sentence = splitter(document)[0]
     words = segmentor(sentence)
     tags = posttagger(words)
-    netags = ner(words, tags)
+    #netags = ner(words, tags)
     arcs = parse(words, tags)
-    roles = role(words, tags, netags, arcs)
-    outtext = emotion(words, tags, netags, arcs, roles)
-    return outtext
+    #roles = role(words, tags, netags, arcs)
+    outtext = emotion(words, tags, arcs)
+    return outtext 
 
 """
 #注册
