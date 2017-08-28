@@ -107,23 +107,17 @@ class SentimentAnalysis():
 
 		for r in range(len(word_arr)):
 			eArr = word_arr[r].strip().split('|')
-			# print '\r\neArr [0]:\r\n', eArr[0],'eArr [1]:\r\n', eArr[1],'eArr [2]:\r\n', eArr[2],'\r\n'
-			# print '\r\nclass_arr:', class_arr,'\r\n'
 			if not data.has_key(si):
 				stat_arr[si] = u''
 				data[si] = dict()
-			# print '\r\n 112  si', si, '\r\nclass_arr:', class_arr, '\r\neArr',eArr,'\r\n'
 			if data[si].has_key(eArr[2]):
 				data[si][eArr[2]].append( [r, eArr[1]] )
 			else:
 				data[si][eArr[2]] = [ [r, eArr[1]] ]
 
-			# print '\r\n 118  si', si, '\r\nclass_arr:', class_arr, '\r\neArr',eArr,'\r\n'
 			if class_arr.has_key(si):
-				# print 'if eArr[2]\r\n',eArr[2],'\r\n[eArr[2]]:\r\n',[eArr[2]]
 				class_arr[si].append( eArr[2] )#词性
 			else:
-				# print 'else eArr[2]\r\n',eArr[2],'\r\n[eArr[2]]:\r\n',[eArr[2]]
 				class_arr[si] = [eArr[2]]#词性
 
 			stat_arr[si] += eArr[1]#字符
@@ -137,7 +131,6 @@ class SentimentAnalysis():
 			c = class_arr[r]
 			inc_arr[r] = 0#包含或不包含初始化
 
-			# print '\r\n stat_arr[r]:',stat_arr[r],' \r\nk:', k,'\r\n'
 			if stat_arr[r].find( k ) != -1:#显性包含关键字
 				inc_arr[r] = 1
 			else:#隐性
@@ -336,3 +329,64 @@ class SentimentAnalysis():
 
 		return stat_val
 
+
+	def relateStmt(self, param_words = [], k = ''):
+		'''
+		Replace the method of 'getrelp(param_words = [], k = ''):'
+		'''
+		word_arr = param_words
+		data = dict()
+		class_arr = dict()
+		stat_arr = dict()
+		inc_arr = dict()
+		si = 0
+
+		for r in range(len(word_arr)):
+			eArr = word_arr[r].strip().split('|')
+			if not data.has_key(si):
+				stat_arr[si] = u''
+				data[si] = dict()
+			if data[si].has_key(eArr[2]):
+				data[si][eArr[2]].append( [r, eArr[1]] )
+			else:
+				data[si][eArr[2]] = [ [r, eArr[1]] ]
+
+			if class_arr.has_key(si):
+				class_arr[si].append( eArr[2] )#词性
+			else:
+				class_arr[si] = [eArr[2]]#词性
+
+			stat_arr[si] += eArr[1]#字符
+
+			if eArr[2] == 'wp':
+				si +=1
+
+		class_n = ('n', 'j', 'r', 'ni', 'nl', 'ns', 'nt', 'nz', 'nd', 'nh', 'ws' )
+
+		for r in range(len(class_arr)):#r 行数
+			c = class_arr[r]
+			inc_arr[r] = 0#包含或不包含初始化
+
+			if stat_arr[r].find( k ) != -1:#显性包含关键字
+				inc_arr[r] = 1
+			else:#隐性
+				ni = vi = -1#记录v和n的位置
+
+				for rk in range(len(c)):#row
+					rv = c[rk]
+
+					if ni == -1 and rv in class_n:
+						ni = rk
+
+					if vi == -1 and rv == 'v':
+						vi = rk
+
+				if vi < ni:# 隐性：主语与上个分句一致
+					if inc_arr.has_key(r-1) and inc_arr[r-1] == 1:#repeat last
+						inc_arr[r] = 1
+
+			if not inc_arr[r]:
+				del data[r]
+
+		return data
+		

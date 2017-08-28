@@ -289,7 +289,7 @@ def emotion(words, postags, arcs):
         #print "%d" % i + "|" + word + ("|%s|%s" % (tag,arc.relation))
         #outtext += "%d" % i + "|" + word + ("|%s|%s" % (tag,arc.relation))+"##"
         outtext += '{"order":'+"%d" % i+','
-        outtext += '"content"'+':"' + word + ("|%s|%s" % (tag,arc.relation))+'"},'
+        outtext += '"content"'+':"' + word + ("|%s|%s" % (tag,arc.head))+'"},'
         i = i + 1
     outtext = outtext.rstrip(',')
     return outtext
